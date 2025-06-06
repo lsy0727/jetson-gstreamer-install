@@ -129,13 +129,13 @@ print(cv2.getBuildInformation())
 
 v4l2-ctl --list-formats-ext -d /dev/video0 명령어로 카메라의 지원 포맷/해상도 확인후 명령어 수정
 
-csi카메라는 13개의 포맷 지원, 해상도 각 1가지씩
+csi카메라는 13개의 포맷 지원, 해상도는 1가지로 통일되어있음
 
 ![image](https://github.com/user-attachments/assets/b8698143-ce91-4704-8d6c-6081989cbe33)
 
 usb카메라는 1개의 포맷 지원, 3가지 해상도 가능
 
-![image](https://github.com/user-attachments/assets/7b271b87-3d85-4b44-8d59-3d57e4c5e3f1)
+![image](https://github.com/user-attachments/assets/f93dd52d-c1ae-4661-8c61-eb87d0594c12)
 
 
 ```
