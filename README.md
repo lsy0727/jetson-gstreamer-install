@@ -30,22 +30,18 @@ SDK Manager를 통해 설치된 opencv로는 gstreamer 사용이 불가한 문�
 python path 확인
 ```
 which python
-# 결과 /usr/bin/python
-```
-symbolic link 확인
-```
-ls -l /usr/bin/python*
-# python이 python3.8을 가리켜야함 (혹은 본인의 python 버전)
+# 결과 /usr/bin/면 성공)
 ```
 
 
 # 설치 방법
 
-1) 작업공간으로 이동
+1) 작업공간 생성
 ```
-$ cd workspace/
+mkdir workspace && cd ~/workspace/
 ```
-2) opencv 공식 깃허브에서 4.5.4버전 소스 다운로드 (현재 디렉토리에 opencv, opencv_contrip이 설치되면 성공)
+
+2) opencv 공식 github에서 소스 다운로드
 ```
 wget -O opencv.zip https://github.com/opencv/opencv/archive/4.5.4.zip
 wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/4.5.4.zip
