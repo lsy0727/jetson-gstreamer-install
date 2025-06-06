@@ -4,6 +4,15 @@ jetson xavier nx보드에 gstreamer를 설치해 영상을 받아오려고함
 
 SDK Manager를 통해 opencv 설치시 gstreamer 사용이 불가한 문제가 생겨 opencv를 직접 빌드하여 사용함
 
+확인해볼 것
+
+1) python path
+```
+which python
+# 결과 /usr/bin/python
+```
+2) 
+
 # 환경
 
 - 보드 : jetson xavier nx
