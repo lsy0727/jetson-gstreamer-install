@@ -2,38 +2,9 @@
 
 raspberry pi 4에서 jetson xavier nx보드로 gstreamer를 사용해 영상을 송/수신하려고함
 
-SDK Manager를 통해 opencv 설치시 gstreamer 사용이 불가한 문제가 생겨 opencv를 직접 빌드하여 사용함
+SDK Manager를 통해 설치된 opencv로는 gstreamer 사용이 불가한 문제가 생겨 opencv를 공식 저장소에서 직접 빌드하여 사용하려고함
 
-# 개요
 
-1) ultralytics 설치
-
-2) opencv-python 제거
-
-3) opencv 소스 다운로드
-
-4) 빌드 & 컴파일
-
-5) 설치 & 버전확인
-
-6) gstreamer 사용가능 여부 확인(빌드 로그에서도 확인 가능)
-
-# 확인해볼 것
-
-1) python path
-```
-which python
-# 결과 /usr/bin/python
-```
-2) symbolic link
-```
-ls -l /usr/bin/python*
-# python이 python3.8을 가리켜야함
-```
-3) opencv-python 설치 확인(설치되어 있으면 제거함)
-```
-pip show opencv-python
-```
 
 # 환경
 
@@ -53,9 +24,20 @@ pip show opencv-python
 
 # 설치 방법
 
-* python 버전이 여러가지 설치되어있으면 이후에 버전 충돌이 발생하는 문제가 있었음.
+* python 버전이 여러가지 설치되어있으면 이후에 버전 충돌이 발생하는 문제가 있었음. (path 지정만 잘 해주면 문제없지만, 문제가 생겼을 때 찾기 힘듦)
 
--> 문제가 발생하지 않도록 설치 전에 python 버전, 경로, 링크 등 확인 필수!! (나중에 문제 발견시 해결하기 힘들다)
+-> 문제가 발생하지 않도록 설치 전에 python 버전, 경로, 링크 등 확인 필수!!
+
+python path
+```
+which python
+# 결과 /usr/bin/python
+```
+symbolic link
+```
+ls -l /usr/bin/python*
+# python이 python3.8을 가리켜야함 (혹은 본인의 python 버전)
+```
 
 1) 작업공간으로 이동
 ```
