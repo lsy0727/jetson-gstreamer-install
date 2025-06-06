@@ -59,6 +59,15 @@ $ cd opencv
 $ mkdir build && cd build
 ```
 4) cmake 파일 빌드
+
+* PYTHON_PACKAGES_PATH 지정을 정확히 해줘야함
+아래 명령어 실행 시 path가 가상환경 venv의 site-packages로 되어있어야함
+```
+python -c "from sysconfig import get_paths as gp; print(gp()['purelib'])"
+```
+ex) /home/username/workspace/venv/lib/python3.8/site-packages
+
+경로가 제대로 출력되면 빌드 수행
 ```
 PYTHON_EXECUTABLE=$(which python)
 
