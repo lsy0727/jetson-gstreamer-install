@@ -126,12 +126,26 @@ print(cv2.getBuildInformation())
 # 실행
 
 - raspberry pi 4 (명령어)
+
+v4l2-ctl --list-formats-ext -d /dev/video0 명령어로 카메라의 지원 포맷/해상도 확인후 명령어 수정
+
+csi카메라는 13개의 포맷 지원, 해상도 각 1가지씩
+
+![image](https://github.com/user-attachments/assets/b8698143-ce91-4704-8d6c-6081989cbe33)
+
+usb카메라는 1개의 포맷 지원, 3가지 해상도 가능
+
+![image](https://github.com/user-attachments/assets/7b271b87-3d85-4b44-8d59-3d57e4c5e3f1)
+
+
 ```
 # csi카메라
+# v4l2-ctl --list-formats-ext -d /dev/video0
 gst-launch-1.0 v4l2src device=/dev/video0 ! \video/x-raw,width=640,height=480,framerate=30/1 ! \videoconvert ! \x264enc tune=zerolatency bitrate=4000 speed-preset=superfast ! \rtph264pay config-interval=1 pt=96 ! \udpsink host=192.168.0.xxx port=5000 sync=false
 ```
 ```
-# usb카메라 
+# usb카메라
+# v4l2-ctl --list-formats-ext -d /dev/video1 
 gst-launch-1.0 v4l2src device=/dev/video1 ! image/jpeg,width=960,height=540,framerate=30/1 ! jpegdec ! videoconvert ! x264enc tune=zerolatency bitrate=4000 speed-preset=superfast ! rtph264pay config-interval=1 pt=96 ! udpsink host=192.168.0.xxx port=5000 sync=false
 ```
 
