@@ -61,7 +61,7 @@ $ cd opencv
 $ mkdir build && cd build
 
 4) cmake 파일 빌드
-
+```
 PYTHON_EXECUTABLE=$(which python)
 
 PYTHON_INCLUDE_DIR=$(python -c "from sysconfig import get_paths as gp; print(gp()['include'])")
@@ -73,7 +73,6 @@ PYTHON_PACKAGES_PATH=$(python -c "from sysconfig import get_paths as gp; print(g
 PYTHON_NUMPY_INCLUDE_DIR=$(python -c "import numpy; print(numpy.get_include())")
 
 # cmake 실행
-```
 cmake -D CMAKE_BUILD_TYPE=RELEASE \
   -D CMAKE_INSTALL_PREFIX=~/linetracer_ws/opencv_install \
   -D OPENCV_EXTRA_MODULES_PATH=~/linetracer_ws/opencv_contrib/modules \
