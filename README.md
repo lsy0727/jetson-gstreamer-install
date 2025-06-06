@@ -4,7 +4,7 @@
 
 문제점과 해결방안 : SDK Manager를 통해 설치된 opencv로는 gstreamer 사용이 불가한 문제가 생겨 opencv를 공식 저장소에서 직접 빌드하여 사용하려고함
 
-- 3줄요약 (ultralytics, opencv 제거 및 설치 순서 매우매우매우매우매우매우매우매우 중요함)
+- 3줄요약 (ultralytics, opencv 제거 및 설치 순서 매우 중요함)
 ```
 python path 확인 필수
 ultralytics 설치 후 opencv-python 관련 파일 제거
