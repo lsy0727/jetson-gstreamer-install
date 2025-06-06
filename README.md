@@ -1,6 +1,6 @@
 # gstreamer-install
 
-목표 : raspberry pi 4에서 jetson xavier nx보드로 gstreamer를 사용해 영상을 송/수신
+목표 : raspberry pi 4(ubuntu-20.04)에서 jetson xavier nx(ubuntu-20.04)보드로 gstreamer를 사용해 영상을 송/수신
 
 문제점과 해결방안 : SDK Manager를 통해 설치된 opencv로는 gstreamer 사용이 불가한 문제가 생겨 opencv를 공식 저장소에서 직접 빌드하여 사용하려고함
 
