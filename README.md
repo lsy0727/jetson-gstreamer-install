@@ -21,23 +21,25 @@ SDK Manager를 통해 설치된 opencv로는 gstreamer 사용이 불가한 문�
 - cudnn : 8.6.0.166
 
 
-
-# 설치 방법
+# 설치 전 확인할 것
 
 * python 버전이 여러가지 설치되어있으면 이후에 버전 충돌이 발생하는 문제가 있었음. (path 지정만 잘 해주면 문제없지만, 문제가 생겼을 때 찾기 힘듦)
 
 -> 문제가 발생하지 않도록 설치 전에 python 버전, 경로, 링크 등 확인 필수!!
 
-python path
+python path 확인
 ```
 which python
 # 결과 /usr/bin/python
 ```
-symbolic link
+symbolic link 확인
 ```
 ls -l /usr/bin/python*
 # python이 python3.8을 가리켜야함 (혹은 본인의 python 버전)
 ```
+
+
+# 설치 방법
 
 1) 작업공간으로 이동
 ```
@@ -45,51 +47,40 @@ $ cd workspace/
 ```
 2) opencv 공식 깃허브에서 4.5.4버전 소스 다운로드 (현재 디렉토리에 opencv, opencv_contrip이 설치되면 성공)
 ```
-$ wget -O opencv.zip https://github.com/opencv/opencv/archive/4.5.4.zip
-
-$ wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/4.5.4.zip
-
-$ unzip opencv.zip
-
-$ unzip opencv_contrib.zip
-
-$ mv opencv-4.5.4 opencv
-
-$ mv opencv_contrib-4.5.4 opencv_contrib
-
-$ rm opencv.zip opencv_contrib.zip
+wget -O opencv.zip https://github.com/opencv/opencv/archive/4.5.4.zip
+wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/4.5.4.zip
+unzip opencv.zip
+unzip opencv_contrib.zip
+mv opencv-4.5.4 opencv
+mv opencv_contrib-4.5.4 opencv_contrib
+rm opencv.zip opencv_contrib.zip
 ```
+
 3-1) 가상환경 생성, 활성화
 ```
-$ python -m venv venv
-
-$ . venv/bin/activate
+python -m venv venv
+. venv/bin/activate
 ```
 3-2) opencv/ 아래에 build 디렉토리 생성
 ```
-$ cd opencv
-
-$ mkdir build && cd build
+cd opencv
+mkdir build && cd build
 ```
 4) cmake 파일 빌드
+```
+# PYTHON_PACKAGES_PATH 지정을 정확히 해줘야함
+# 아래 명령어 실행 시 path가 가상환경 venv의 site-packages로 되어있어야함
 
-* PYTHON_PACKAGES_PATH 지정을 정확히 해줘야함
-아래 명령어 실행 시 path가 가상환경 venv의 site-packages로 되어있어야함
-```
 python -c "from sysconfig import get_paths as gp; print(gp()['purelib'])"
+# ex) /home/username/workspace/venv/lib/python3.8/site-packages
 ```
-ex) /home/username/workspace/venv/lib/python3.8/site-packages
 
 경로가 제대로 출력되면 빌드 수행
 ```
 PYTHON_EXECUTABLE=$(which python)
-
 PYTHON_INCLUDE_DIR=$(python -c "from sysconfig import get_paths as gp; print(gp()['include'])")
-
 PYTHON_LIBRARY=$(python -c "import sysconfig; print(sysconfig.get_config_var('LIBDIR'))")/libpython$(python -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')").so
-
 PYTHON_PACKAGES_PATH=$(python -c "from sysconfig import get_paths as gp; print(gp()['purelib'])")
-
 PYTHON_NUMPY_INCLUDE_DIR=$(python -c "import numpy; print(numpy.get_include())")
 
 # cmake 실행
@@ -117,18 +108,22 @@ make -j$(nproc)
 make install
 ```
 
-=> 설치까지 하면 ~/workspace/venv/lib/python3.8/site-packages/cv2/python-3.8 아래에 .so파일이 생성됨
+=> 설치까지 하면 ~/workspace/opencv/build/lib/python3/
+~/workspace/venv/lib/python3.8/site-packages/cv2/python-3.8/  두 경로에 .so파일이 생성됨
 
 - opencv 설치 확인 (opencv 4.5.4버전이 출력되어야함)
 ```
 import cv2
 print(cv2.__version__)
 ```
+![image](https://github.com/user-attachments/assets/bb6fb114-1679-4129-a0b2-c7f463019c76)
+
 - gstreamer를 사용할 수 있는지 확인 (YES가 출력되어야함)
 ```
 import cv2
 print(cv2.getBuildInformation())
 ```
+![image](https://github.com/user-attachments/assets/93792ddd-8664-47a4-bef2-eac0983577b0)
 
 
 
