@@ -32,7 +32,7 @@ SDK Manager를 통해 설치된 opencv로는 gstreamer 사용이 불가한 문�
 which python
 # 결과 /usr/bin/면 성공)
 ```
-
+* 핵심은 python, opencv, gstreamer의 버전과 설치하려는 opencv버전이 gstreamer를 지원하는지임
 
 # 설치 방법
 
