@@ -125,7 +125,7 @@ print(cv2.getBuildInformation())
 
 # 실행
 
-- raspberry pi 4 (명령어)
+## raspberry pi 4 (명령어)
 
 v4l2-ctl --list-formats-ext -d /dev/video0 명령어로 카메라의 지원 포맷/해상도 확인후 명령어 수정
 
@@ -149,7 +149,11 @@ gst-launch-1.0 v4l2src device=/dev/video0 ! \video/x-raw,width=640,height=480,fr
 gst-launch-1.0 v4l2src device=/dev/video1 ! image/jpeg,width=960,height=540,framerate=30/1 ! jpegdec ! videoconvert ! x264enc tune=zerolatency bitrate=4000 speed-preset=superfast ! rtph264pay config-interval=1 pt=96 ! udpsink host=192.168.0.xxx port=5000 sync=false
 ```
 
-- jetson xavier nx (python 코드)
+## jetson xavier nx (python 코드)
+```
+# 테스트용 명령어
+gst-launch-1.0 udpsrc port=5000 caps="application/x-rtp, media=video, encoding-name=H264, payload=96" ! rtph264depay ! h264parse ! nvv4l2decoder ! nvvidconv ! videoconvert ! autovideosink
+```
 ```
 import cv2
 
