@@ -1,8 +1,8 @@
 # gstreamer-install
 
-raspberry pi 4에서 jetson xavier nx보드로 gstreamer를 사용해 영상을 송/수신하려고함
+목표 : raspberry pi 4에서 jetson xavier nx보드로 gstreamer를 사용해 영상을 송/수신
 
-SDK Manager를 통해 설치된 opencv로는 gstreamer 사용이 불가한 문제가 생겨 opencv를 공식 저장소에서 직접 빌드하여 사용하려고함
+문제점과 해결방안 : SDK Manager를 통해 설치된 opencv로는 gstreamer 사용이 불가한 문제가 생겨 opencv를 공식 저장소에서 직접 빌드하여 사용하려고함
 
 
 
@@ -19,6 +19,16 @@ SDK Manager를 통해 설치된 opencv로는 gstreamer 사용이 불가한 문�
 - cuda : 11.4.315
 
 - cudnn : 8.6.0.166
+
+- gstreamer : 1.16.3
+
+* 설치한 것
+
+ultralytics
+
+opencv : 4.5.4
+
+
 
 
 # 설치 전 확인할 것
@@ -163,7 +173,7 @@ gst-launch-1.0 v4l2src device=/dev/video0 ! \video/x-raw,width=640,height=480,fr
 gst-launch-1.0 v4l2src device=/dev/video1 ! image/jpeg,width=960,height=540,framerate=30/1 ! jpegdec ! videoconvert ! x264enc tune=zerolatency bitrate=4000 speed-preset=superfast ! rtph264pay config-interval=1 pt=96 ! udpsink host=192.168.0.xxx port=5000 sync=false
 ```
 
-## jetson xavier nx (python 코드)
+## jetson xavier nx (python 테스트 코드)
 ```
 # 테스트용 명령어
 gst-launch-1.0 udpsrc port=5000 caps="application/x-rtp, media=video, encoding-name=H264, payload=96" ! rtph264depay ! h264parse ! nvv4l2decoder ! nvvidconv ! videoconvert ! autovideosink
