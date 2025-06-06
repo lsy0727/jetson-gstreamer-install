@@ -46,8 +46,6 @@ $ mv opencv_contrib-4.5.4 opencv_contrib
 
 $ rm opencv.zip opencv_contrib.zip
 
-- -
-
 3-1) 가상환경 생성, 활성화
 
 $ python -m venv venv
@@ -61,6 +59,7 @@ $ cd opencv
 $ mkdir build && cd build
 
 4) cmake 파일 빌드
+
 ```
 PYTHON_EXECUTABLE=$(which python)
 
