@@ -23,11 +23,11 @@ SDK Manager를 통해 설치된 opencv로는 gstreamer 사용이 불가한 문�
 
 # 설치 전 확인할 것
 
-python 버전이 여러가지 설치되어있으면 이후에 버전 충돌이 발생하는 문제가 있었음. (path 지정만 잘 해주면 문제없지만, 문제가 생겼을 때 찾기 힘듦)
+1) 설치된 python버전이 여러개 있는지 확인인 (path 지정만 잘 해주면 문제없지만, 문제가 생겼을 때 찾기 힘듦)
 
--> 문제가 발생하지 않도록 설치 전에 python 버전, 경로, 링크 등 확인 필수!!
+-> 문제가 발생하지 않도록 설치 전에 python 버전, 경로, 링크 등 확인 필수
 
-python path 확인
+2) python path 확인
 ```
 which python
 # 결과 /usr/bin/면 성공)
@@ -41,7 +41,26 @@ which python
 mkdir workspace && cd ~/workspace/
 ```
 
-2) opencv 공식 github에서 소스 다운로드
+2) 가상환경 생성, 활성화
+```
+python -m venv venv
+. venv/bin/activate
+```
+
+3-1) ultralytics 설치
+```
+pip install ultralytics
+```
+3-2) opencv-python제거 (ultralytics를 설치하며 함께 설치된 opencv를 제거하는 것임)
+```
+pip uninstall opencv-python
+# 이 명령으로 제거되지만 잔여 파일이 남아있는지 확인하는 것이 확실함 / 아래 명령어로 확실하게 제거
+# rm -rf venv/lib/python3.8/site-packages/cv2
+# rm -rf ~/workspace/venv/lib/python3.8/site-packages/opencv_python-x.xx.x.x.dist-info
+# rm -rf venv/lib/python3.8/site-packages/opencv_python.libs
+```
+
+4-1) opencv 공식 github에서 소스 다운로드
 ```
 wget -O opencv.zip https://github.com/opencv/opencv/archive/4.5.4.zip
 wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/4.5.4.zip
@@ -52,17 +71,12 @@ mv opencv_contrib-4.5.4 opencv_contrib
 rm opencv.zip opencv_contrib.zip
 ```
 
-3-1) 가상환경 생성, 활성화
-```
-python -m venv venv
-. venv/bin/activate
-```
-3-2) opencv/ 아래에 build 디렉토리 생성
+4-2) opencv/ 아래에 build 디렉토리 생성
 ```
 cd opencv
 mkdir build && cd build
 ```
-4) cmake 파일 빌드
+5) cmake 파일 빌드
 ```
 # PYTHON_PACKAGES_PATH 지정을 정확히 해줘야함
 # 아래 명령어 실행 시 path가 가상환경 venv의 site-packages로 되어있어야함
@@ -94,12 +108,12 @@ cmake -D CMAKE_BUILD_TYPE=RELEASE \
   -D PYTHON3_NUMPY_INCLUDE_DIRS=${PYTHON_NUMPY_INCLUDE_DIR} \
   ..
 ```
-5) 컴파일
+6) 컴파일
 ```
 make -j$(nproc)
 # 발열이 심할 수 있으니 make -j2 사용 권장함
 ```
-6) 설치
+7) 설치
 ```
 make install
 ```
@@ -186,6 +200,35 @@ def main():
 if __name__ == "__main__":
     main()
 ```
+
+
+# 설치 중 발생한 문제점들 (Q & A)
+
+Q1. nx환경에서 gstreamer가 명령어로는 열리지만 python코드로 열지 못함
+
+  A. pip으로 설치한 opencv-python은 gstreamer를 지원하지 않아, opencv를 직접 빌드해서 사용해야됨 (SDK Manager로 설치한 opencv도 포함)
+
+  -> opencv를 특정 작업공간에 설치해서 사용했기 때문에 jtop명령어로 opencv확인시 라이브러리를 찾지 못해도 실행에 문제는 없음
+
+-----
+
+Q2. ultralytics 패키지가 필요해 설치할 경우 opencv를 자동으로 설치해주기 때문에 다시 문제가 생김
+
+  A. ultralytics 패키지를 설치한 후 opencv 관련 파일을 모두 제거한 후 opencv를 직접 빌드함
+
+-----
+
+Q3. nx환경에서 python 여러가지 버전을 사용하기 위해 pyenv를 설치하였는데, 이로 인해 빌드옵션으로 python버전을 3.8로 명시해주어도 pyenv가 우선순위로 지정하고있는 python버전으로 openv를 빌드하는 문제가 있었음.
+
+-> which python 명령어로 확인해보면 /usr/bin/python이 아닌 .pyenv를 통한 경로가 나오면 이후에 opencv 빌드시에 원하는 python버전으로 설치가 불가능했음.
+
+  A. pyenv환경을 off 하였음
+  ```
+  pyenv global system
+  hash -r
+  ```
+
+
 
 
 
