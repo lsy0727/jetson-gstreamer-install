@@ -206,15 +206,15 @@ if __name__ == "__main__":
 
 Q1. nx환경에서 gstreamer가 명령어로는 열리지만 python코드로 열지 못함
 
-  A. pip으로 설치한 opencv-python은 gstreamer를 지원하지 않아, opencv를 직접 빌드해서 사용해야됨 (SDK Manager로 설치한 opencv도 포함)
+A. pip으로 설치한 opencv-python은 gstreamer를 지원하지 않아, opencv를 직접 빌드해서 사용해야됨 (SDK Manager로 설치한 opencv도 포함)
 
-  -> opencv를 특정 작업공간에 설치해서 사용했기 때문에 jtop명령어로 opencv확인시 라이브러리를 찾지 못해도 실행에 문제는 없음
+-> opencv를 특정 작업공간에 설치해서 사용했기 때문에 jtop명령어로 opencv확인시 라이브러리를 찾지 못해도 실행에 문제는 없음
 
 -----
 
 Q2. ultralytics 패키지가 필요해 설치할 경우 opencv를 자동으로 설치해주기 때문에 다시 문제가 생김
 
-  A. ultralytics 패키지를 설치한 후 opencv 관련 파일을 모두 제거한 후 opencv를 직접 빌드함
+A. ultralytics 패키지를 설치한 후 opencv 관련 파일을 모두 제거한 후 opencv를 직접 빌드함
 
 -----
 
@@ -222,11 +222,11 @@ Q3. nx환경에서 python 여러가지 버전을 사용하기 위해 pyenv를 �
 
 -> which python 명령어로 확인해보면 /usr/bin/python이 아닌 .pyenv를 통한 경로가 나오면 이후에 opencv 빌드시에 원하는 python버전으로 설치가 불가능했음.
 
-  A. pyenv환경을 off 하였음
-  ```
-  pyenv global system
-  hash -r
-  ```
+A. pyenv환경을 off 하였음
+```
+pyenv global system
+hash -r
+```
 
 
 
