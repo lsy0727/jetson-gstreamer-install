@@ -123,7 +123,51 @@ print(cv2.getBuildInformation())
 
 
 
+# 실행
 
+- raspberry pi 4 (명령어)
+```
+# csi카메라
+gst-launch-1.0 v4l2src device=/dev/video0 ! \video/x-raw,width=640,height=480,framerate=30/1 ! \videoconvert ! \x264enc tune=zerolatency bitrate=4000 speed-preset=superfast ! \rtph264pay config-interval=1 pt=96 ! \udpsink host=192.168.0.xxx port=5000 sync=false
+```
+```
+# usb카메라 
+gst-launch-1.0 v4l2src device=/dev/video1 ! image/jpeg,width=960,height=540,framerate=30/1 ! jpegdec ! videoconvert ! x264enc tune=zerolatency bitrate=4000 speed-preset=superfast ! rtph264pay config-interval=1 pt=96 ! udpsink host=192.168.0.xxx port=5000 sync=false
+```
+
+- jetson xavier nx (python 코드)
+```
+import cv2
+
+def main():
+    gst_str = (
+        'udpsrc port=5000 caps="application/x-rtp, media=video, encoding-name=H264, payload=96" ! '
+        'rtph264depay ! h264parse ! nvv4l2decoder ! '
+        'nvvidconv ! video/x-raw, format=BGRx ! '
+        'videoconvert ! video/x-raw, format=BGR ! '
+        'appsink'
+    )
+    cap = cv2.VideoCapture(gst_str, cv2.CAP_GSTREAMER)
+    if not cap.isOpened():
+        print("pipeline open failed")
+        return
+
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            print("Failed to receive frame")
+            break
+
+        cv2.imshow("Jetson Video Stream", frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
+
+if __name__ == "__main__":
+    main()
+```
 
 
 
