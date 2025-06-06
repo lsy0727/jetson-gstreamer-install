@@ -224,7 +224,7 @@ A. pip으로 설치한 opencv-python은 gstreamer를 지원하지 않아, opencv
 
 Q2. ultralytics 패키지가 필요해 설치할 경우 opencv를 자동으로 설치해주기 때문에 다시 문제가 생김
 
-A. ultralytics 패키지를 설치한 후 opencv 관련 파일을 모두 제거한 후 opencv를 직접 빌드함  <<<-----이게 제일 핵심임
+A. ultralytics 패키지를 설치한 후 opencv 관련 파일을 모두 제거한 후 opencv를 직접 빌드함
 
 -----
 
