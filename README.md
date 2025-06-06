@@ -6,7 +6,7 @@
 
 - 3줄요약 (ultralytics, opencv 제거 및 설치 순서 매우 중요함)
 ```
-python path 확인 필수 (python이 여러버전 설치되어있다면 어떤 버전이 사용되는지 수시로 확인)
+python path 확인 필수 (python이 여러버전 설치되어있다면 어떤 버전이 사용되고있는지 확인)
 ultralytics 설치 후 opencv-python 관련 파일 제거 (꼭 제거해야됨)
 opencv 공식 깃허브에서 소스 받아서 직접 빌드 (이렇게 안하면 gstreamer 사용못함)
 ```
