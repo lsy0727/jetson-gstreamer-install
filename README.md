@@ -2,12 +2,12 @@
 
 목표 : raspberry pi 4(ubuntu-20.04)에서 jetson xavier nx(ubuntu-20.04)보드로 gstreamer를 사용해 영상을 송/수신
 
-문제점과 해결방안 : SDK Manager를 통해 설치된 opencv로는 gstreamer 사용이 불가한 문제가 생겨 opencv를 공식 저장소에서 직접 빌드하여 사용하려고함
+문제점과 해결방안 : SDK Manager로 설치했던 opencv로는 gstreamer 사용이 불가한 문제가 생겨 opencv를 공식 저장소에서 직접 빌드하여 사용하려고함
 
 - 3줄요약 (ultralytics, opencv 제거 및 설치 순서 매우 중요함)
 ```
 python path 확인 필수 (python이 여러버전 설치되어있다면 어떤 버전이 사용되고있는지 확인)
-ultralytics 설치 후 opencv-python 관련 파일 제거 (꼭 제거해야됨)
+ultralytics를 먼저 설치했다면 opencv-python 관련 파일 제거 (꼭 제거해야됨)
 opencv 공식 깃허브에서 소스 받아서 직접 빌드 (이렇게 안하면 gstreamer 사용못함)
 ```
 
@@ -30,7 +30,7 @@ opencv 공식 깃허브에서 소스 받아서 직접 빌드 (이렇게 안하�
 
 * 설치한 것
 
-ultralytics
+python 패키지 : pytorch pytorchvision ultralytics
 
 opencv : 4.8.0
 
@@ -50,11 +50,13 @@ which python
 ```
 * 핵심은 python, opencv, gstreamer의 버전과 설치하려는 opencv버전이 gstreamer를 지원하는지임
 
-# 설치 방법
+# OPENCV 설치
+
+opencv 설치 참고자료 : https://qengineering.eu/install-opencv-on-jetson-nano.html
 
 1) 작업공간 생성
 ```
-mkdir workspace && cd ~/workspace/
+mkdir workspace && cd ~/workspace
 ```
 
 2) 가상환경 생성, 활성화
@@ -63,11 +65,9 @@ python -m venv venv
 . venv/bin/activate
 ```
 
-3-1) ultralytics 설치
-```
-pip install ultralytics
-```
-3-2) opencv-python제거 (ultralytics를 설치하며 함께 설치된 opencv를 제거하는 것임)
+- 기존에 만들어둔 가상환경을 그대로 사용한다면 opencv가 설치되어있는지 확인해야함
+
+(ultralytics처럼 opencv가 자동설치되는 경우가 있으니 꼭 확인해볼 것)
 ```
 pip uninstall opencv-python
 # 이 명령으로 제거되지만 잔여 파일이 남아있는지 확인하는 것이 확실함 / 아래 명령어로 확실하게 제거
@@ -76,23 +76,30 @@ pip uninstall opencv-python
 # rm -rf venv/lib/python3.8/site-packages/opencv_python.libs
 ```
 
-4-1) opencv 공식 github에서 소스 다운로드
+3-1) opencv 공식 github에서 소스 다운로드
 ```
-wget -O opencv.zip https://github.com/opencv/opencv/archive/4.5.4.zip
-wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/4.5.4.zip
+cd ~/workspace
+wget -O opencv.zip https://github.com/opencv/opencv/archive/4.8.0.zip
+wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/4.8.0.zip
+# unpack
 unzip opencv.zip
 unzip opencv_contrib.zip
-mv opencv-4.5.4 opencv
-mv opencv_contrib-4.5.4 opencv_contrib
-rm opencv.zip opencv_contrib.zip
+# some administration to make live easier later on
+mv opencv-4.8.0 opencv
+mv opencv_contrib-4.8.0 opencv_contrib
+# clean up the zip files
+rm opencv.zip
+rm opencv_contrib.zip
 ```
 
-4-2) opencv/ 아래에 build 디렉토리 생성
+3-2) opencv/ 아래에 build 디렉토리 생성
 ```
 cd opencv
 mkdir build && cd build
 ```
-5) cmake 파일 빌드
+
+4) cmake 파일 빌드
+- python path확인
 ```
 # PYTHON_PACKAGES_PATH 지정을 정확히 해줘야함
 # 아래 명령어 실행 시 path가 가상환경 venv의 site-packages로 되어있어야함
@@ -100,8 +107,7 @@ mkdir build && cd build
 python -c "from sysconfig import get_paths as gp; print(gp()['purelib'])"
 # ex) /home/username/workspace/venv/lib/python3.8/site-packages
 ```
-
-경로가 제대로 출력되면 빌드 수행
+- path 정상이면면 빌드
 ```
 PYTHON_EXECUTABLE=$(which python)
 PYTHON_INCLUDE_DIR=$(python -c "from sysconfig import get_paths as gp; print(gp()['include'])")
@@ -109,35 +115,60 @@ PYTHON_LIBRARY=$(python -c "import sysconfig; print(sysconfig.get_config_var('LI
 PYTHON_PACKAGES_PATH=$(python -c "from sysconfig import get_paths as gp; print(gp()['purelib'])")
 PYTHON_NUMPY_INCLUDE_DIR=$(python -c "import numpy; print(numpy.get_include())")
 
-# cmake 실행
 cmake -D CMAKE_BUILD_TYPE=RELEASE \
   -D CMAKE_INSTALL_PREFIX=~/linetracer_ws/opencv_install \
   -D OPENCV_EXTRA_MODULES_PATH=~/linetracer_ws/opencv_contrib/modules \
+  -D EIGEN_INCLUDE_PATH=/usr/include/eigen3 \
+  -D WITH_OPENCL=OFF \
   -D WITH_CUDA=ON \
+  -D CUDA_ARCH_BIN=7.2 \
+  -D CUDA_ARCH_PTX="" \
+  -D WITH_CUDNN=ON \
+  -D WITH_CUBLAS=ON \
+  -D ENABLE_FAST_MATH=ON \
+  -D CUDA_FAST_MATH=ON \
+  -D OPENCV_DNN_CUDA=ON \
+  -D ENABLE_NEON=ON \
+  -D WITH_QT=OFF \
+  -D WITH_OPENMP=ON \
+  -D BUILD_TIFF=ON \
+  -D WITH_FFMPEG=ON \
   -D WITH_GSTREAMER=ON \
-  -D BUILD_opencv_python3=ON \
-  -D BUILD_opencv_python2=OFF \
+  -D WITH_TBB=ON \
+  -D BUILD_TBB=ON \
+  -D BUILD_TESTS=OFF \
+  -D WITH_EIGEN=ON \
+  -D WITH_V4L=ON \
+  -D WITH_LIBV4L=ON \
+  -D WITH_PROTOBUF=ON \
+  -D OPENCV_ENABLE_NONFREE=ON \
+  -D INSTALL_C_EXAMPLES=OFF \
+  -D INSTALL_PYTHON_EXAMPLES=OFF \
   -D PYTHON3_EXECUTABLE=${PYTHON_EXECUTABLE} \
   -D PYTHON3_INCLUDE_DIR=${PYTHON_INCLUDE_DIR} \
   -D PYTHON3_LIBRARY=${PYTHON_LIBRARY} \
   -D PYTHON3_PACKAGES_PATH=${PYTHON_PACKAGES_PATH} \
   -D PYTHON3_NUMPY_INCLUDE_DIRS=${PYTHON_NUMPY_INCLUDE_DIR} \
-  ..
+  -D OPENCV_GENERATE_PKGCONFIG=ON \
+  -D BUILD_EXAMPLES=OFF ..
+
 ```
-6) 컴파일
+5) 컴파일
 ```
 make -j$(nproc)
-# 발열이 심할 수 있으니 make -j2 사용 권장함
+# cpu코어가 충분해도 ram이 적다면 make -j2 사용 권장
 ```
-7) 설치
+6) 설치
 ```
 make install
 ```
+=> 설치완료되면 아래 두 경로에 .so파일이 생성됨
 
-=> 설치까지 하면 ~/workspace/opencv/build/lib/python3/
-~/workspace/venv/lib/python3.8/site-packages/cv2/python-3.8/  두 경로에 .so파일이 생성됨
+~/workspace/opencv/build/lib/python3/
 
-- opencv 설치 확인 (opencv 4.5.4버전이 출력되어야함)
+~/workspace/venv/lib/python3.8/site-packages/cv2/python-3.8/
+
+- opencv 설치 확인 (opencv 4.8.0버전이 출력되어야함)
 ```
 import cv2
 print(cv2.__version__)
@@ -150,6 +181,19 @@ import cv2
 print(cv2.getBuildInformation())
 ```
 ![image](https://github.com/user-attachments/assets/93792ddd-8664-47a4-bef2-eac0983577b0)
+
+
+
+# pytorch 설치
+
+
+
+# ultralytics 설치
+
+1) ultralytics 설치
+```
+pip install ultralytics
+```
 
 
 
