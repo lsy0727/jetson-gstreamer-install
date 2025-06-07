@@ -46,9 +46,13 @@ python path 확인 (가상환경 비활성화 상태에서 확인함)
 # 작업공간 : user@nx:~$
 
 which python
-
 # 결과 /usr/bin/python 으로 되어있어야함)
+
+# /usr/bin/python 에 링크가 어디에 되어있는지 확인해야함
+ls -l /usr/bin/python*
 ```
+![image](https://github.com/user-attachments/assets/1a15d856-2bbb-4d03-93f0-3f2e42c5988b)
+
 
 2) python, opencv, gstreamer의 버전과 설치하려는 opencv버전이 gstreamer를 지원하는지 알아보고 설치해야함
 
@@ -306,9 +310,9 @@ if __name__ == "__main__":
 
 Q1. nx환경에서 python 여러가지 버전을 사용하기 위해 pyenv를 설치하였는데, 이로 인해 빌드옵션으로 python버전을 3.8로 명시해주어도 pyenv가 우선순위로 지정하고있는 python버전으로 openv를 빌드하는 문제가 있었음.
 
--> which python 명령어로 확인해보면 /usr/bin/python이 아닌 .pyenv를 통한 경로가 나오면 이후에 opencv 빌드시에 원하는 python버전으로 설치가 불가능했음.
+A. which python 명령어로 확인해보면 /usr/bin/python이 아닌 .pyenv를 통한 경로가 나오면 이후에 opencv 빌드시에 원하는 python버전으로 설치가 불가능할 수 있음
 
-A. pyenv환경을 off 하였음
+-> pyenv환경을 off 하였음
 ```
 pyenv global system
 hash -r
