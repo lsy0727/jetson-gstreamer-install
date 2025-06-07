@@ -50,8 +50,9 @@ source venv/bin/activate
  
 -> 문제가 발생하지 않도록 설치 전에 python 버전, 경로, 링크 등 확인 필수
 
-python path 확인
+python path 확인 (가상환경 비활성화 상태에서 확인함)
 ```
+# user@nx:~/workspace$
 which python
 # 결과 /usr/bin/python 으로 되어있어야함)
 ```
