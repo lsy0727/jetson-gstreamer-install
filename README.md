@@ -314,6 +314,8 @@ pyenv global system
 hash -r
 ```
 
+-----
+
 Q2. nx환경에서 gstreamer가 명령어로는 열리지만 python코드로 열지 못함
 
 A. pip으로 설치한 opencv-python은 gstreamer를 지원하지 않음
