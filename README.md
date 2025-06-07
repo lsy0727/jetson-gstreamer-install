@@ -32,7 +32,7 @@ opencv 공식 깃허브에서 소스 받아서 직접 빌드 (이렇게 안하�
 
 ultralytics
 
-opencv : 4.5.4
+opencv : 4.8.0
 
 
 
