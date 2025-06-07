@@ -110,7 +110,7 @@ pip uninstall opencv-python
 
 opencv 설치 참고자료 : https://qengineering.eu/install-opencv-on-jetson-nano.html
 
-3-1) opencv 공식 github에서 소스 다운로드
+1) opencv 공식 github에서 소스 다운로드
 ```
 # 작업공간 : (venv) user@nx:~/workspace$
 
@@ -130,7 +130,7 @@ rm opencv.zip
 rm opencv_contrib.zip
 ```
 
-3-2) opencv/ 아래에 build 디렉토리 생성
+2) opencv/ 아래에 build 디렉토리 생성
 ```
 # 작업공간 : (venv) user@nx:~/workspace$
 
@@ -138,7 +138,7 @@ cd opencv
 mkdir build && cd build
 ```
 
-4) cmake 파일 빌드
+3) cmake 파일 빌드
 - python path확인
 ```
 # 작업공간 : (venv) user@nx:~/workspace/opencv/build$
@@ -197,7 +197,7 @@ cmake -D CMAKE_BUILD_TYPE=RELEASE \
   -D BUILD_EXAMPLES=OFF ..
 
 ```
-5) 컴파일
+4) 컴파일
 ```
 # 작업공간 : (venv) user@nx:~/workspace/opencv/build$
 
@@ -205,7 +205,7 @@ make -j$(nproc)
 
 # cpu코어가 충분해도 ram이 적다면 make -j2 사용 권장
 ```
-6) 설치
+5) 설치
 ```
 # 작업공간 : (venv) user@nx:~/workspace/opencv/build$
 
