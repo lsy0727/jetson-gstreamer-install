@@ -184,8 +184,12 @@ print(cv2.getBuildInformation())
 
 
 
-# pytorch 설치
+# torch, torch vision설치
 
+```
+pip install --extra-index-url https://pypi.jetson-ai-lab.dev/jp5/cu114 torch==2.2.0
+pip install --extra-index-url https://pypi.jetson-ai-lab.dev/jp5/cu114 torch==2.2.0 torchvision==0.16.0
+```
 
 
 # ultralytics 설치
