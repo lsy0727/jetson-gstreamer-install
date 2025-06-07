@@ -6,9 +6,9 @@
 
 - 3줄요약 (opencv, python 패키지 설치 순서 매우 중요함)
 ```
-python path 확인 필수 (python이 여러버전 설치되어있다면 어떤 버전이 사용되고있는지 확인)
-먼저 설치했던 opencv가 있다면 opencv 관련 파일 제거
-opencv 공식 깃허브에서 소스 받아서 직접 빌드 (이렇게 안하면 gstreamer 사용못함)
+1. torch, torch vision 설치
+2. ultralytics 설치 & opencv 관련 파일 제거
+3. opencv 설치
 ```
 
 
@@ -28,47 +28,72 @@ opencv 공식 깃허브에서 소스 받아서 직접 빌드 (이렇게 안하�
 
 - gstreamer : 1.16.3
 
-* 설치한 것
+- 설치한 것
 
 python 패키지 : pytorch pytorchvision ultralytics
 
 opencv : 4.8.0
 
 
+# 작업공간
+```
+mkdir workspace && cd ~/workspace
+python -m venv venv
+source venv/bin/activate
+```
 
 
 # 설치 전 확인할 것
 
-1) 설치된 python버전이 여러개 있는지 확인인 (path 지정만 잘 해주면 문제없지만, 문제가 생겼을 때 찾기 힘듦)
-
+1) 설치된 python버전이 여러개 있는지 확인 (path 지정만 잘 해주면 문제없지만, 문제가 생겼을 때 찾기 힘듦)
+ 
 -> 문제가 발생하지 않도록 설치 전에 python 버전, 경로, 링크 등 확인 필수
 
-2) python path 확인
+python path 확인
 ```
 which python
-# 결과 /usr/bin/면 성공)
-```
-* 핵심은 python, opencv, gstreamer의 버전과 설치하려는 opencv버전이 gstreamer를 지원하는지임
-
-# OPENCV 설치
-
-opencv 설치 참고자료 : https://qengineering.eu/install-opencv-on-jetson-nano.html
-
-1) 작업공간 생성
-```
-mkdir workspace && cd ~/workspace
+# 결과 /usr/bin/로 되어있어야함)
 ```
 
-2) 가상환경 생성, 활성화
+2) python, opencv, gstreamer의 버전과 설치하려는 opencv버전이 gstreamer를 지원하는지 알아보고 설치해야함
+
+
+
+# torch, torch vision설치
+
+참고자료 : https://pypi.jetson-ai-lab.dev/jp5/cu114
+
+해당 사이트에서 torch, torch vision wheel 파일 두 개를 다운받음
+
+![image](https://github.com/user-attachments/assets/d631b1c4-4717-422b-98b7-d0a54b5fdc05)
+
+1) 가상환경 생성, 활성화
 ```
+cd ~/workspace/
 python -m venv venv
 . venv/bin/activate
 ```
-
-- 기존에 만들어둔 가상환경을 그대로 사용한다면 opencv가 설치되어있는지 확인해야함
-
-(ultralytics처럼 opencv가 자동설치되는 경우가 있으니 꼭 확인해볼 것)
+2) 다운받은 wheel파일을 이용해 패키지 설치 (pip install <file_path>)
 ```
+# 작업공간 : (venv) user@nx:~/workspace$
+# torch 2.2.0
+pip install torch-2.2.0-cp38-cp38-linux_aarch64.whl
+# torch vision 0.16.0
+pip install torchvision-0.17.2+c1d70fe-cp38-cp38-linux_aarch64.whl
+```
+
+
+# ultralytics 설치
+
+1) ultralytics 설치
+```
+# 작업공간 : (venv) user@nx:~/workspace$
+pip install ultralytics
+```
+2) opencv를 직접 빌드해서 설치할 것이기 때문에 ultralytics를 설치할 때 함께 설치된 opencv-python을 제거해야함
+-> opencv를 설치하고 ultralytics를 설치하는 방법도 해봤는데, opencv를 pip으로 설치하지 않아서 ultralytics를 설치할 때 opencv를 인식하지 못해 4.11.0으로 갱신되는 문제가 있었음.
+```
+# 작업공간 : (venv) user@nx:~/workspace$
 pip uninstall opencv-python
 # 이 명령으로 제거되지만 잔여 파일이 남아있는지 확인하는 것이 확실함 / 아래 명령어로 확실하게 제거
 # rm -rf venv/lib/python3.8/site-packages/cv2
@@ -76,9 +101,13 @@ pip uninstall opencv-python
 # rm -rf venv/lib/python3.8/site-packages/opencv_python.libs
 ```
 
+# OPENCV 설치
+
+opencv 설치 참고자료 : https://qengineering.eu/install-opencv-on-jetson-nano.html
+
 3-1) opencv 공식 github에서 소스 다운로드
 ```
-cd ~/workspace
+# 작업공간 : (venv) user@nx:~/workspace$
 wget -O opencv.zip https://github.com/opencv/opencv/archive/4.8.0.zip
 wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/4.8.0.zip
 # unpack
@@ -94,6 +123,7 @@ rm opencv_contrib.zip
 
 3-2) opencv/ 아래에 build 디렉토리 생성
 ```
+# 작업공간 : (venv) user@nx:~/workspace$
 cd opencv
 mkdir build && cd build
 ```
@@ -101,14 +131,16 @@ mkdir build && cd build
 4) cmake 파일 빌드
 - python path확인
 ```
+# 작업공간 : (venv) user@nx:~/workspace$
 # PYTHON_PACKAGES_PATH 지정을 정확히 해줘야함
 # 아래 명령어 실행 시 path가 가상환경 venv의 site-packages로 되어있어야함
 
 python -c "from sysconfig import get_paths as gp; print(gp()['purelib'])"
-# ex) /home/username/workspace/venv/lib/python3.8/site-packages
+# ex) /home/user/workspace/venv/lib/python3.8/site-packages
 ```
 - path 정상이면면 빌드
 ```
+# 작업공간 : (venv) user@nx:~/workspace/opencv/build$
 PYTHON_EXECUTABLE=$(which python)
 PYTHON_INCLUDE_DIR=$(python -c "from sysconfig import get_paths as gp; print(gp()['include'])")
 PYTHON_LIBRARY=$(python -c "import sysconfig; print(sysconfig.get_config_var('LIBDIR'))")/libpython$(python -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')").so
@@ -155,14 +187,18 @@ cmake -D CMAKE_BUILD_TYPE=RELEASE \
 ```
 5) 컴파일
 ```
+# 작업공간 : (venv) user@nx:~/workspace/opencv/build$
 make -j$(nproc)
 # cpu코어가 충분해도 ram이 적다면 make -j2 사용 권장
 ```
 6) 설치
 ```
+# 작업공간 : (venv) user@nx:~/workspace/opencv/build$
 make install
 ```
 => 설치완료되면 아래 두 경로에 .so파일이 생성됨
+
+(첫 번째 경로의 파일은 사용되지 않고, import할 때 두 번째 경로의 파일이 사용됨)
 
 ~/workspace/opencv/build/lib/python3/
 
@@ -183,21 +219,6 @@ print(cv2.getBuildInformation())
 ![image](https://github.com/user-attachments/assets/93792ddd-8664-47a4-bef2-eac0983577b0)
 
 
-
-# torch, torch vision설치
-
-```
-pip install --extra-index-url https://pypi.jetson-ai-lab.dev/jp5/cu114 torch==2.2.0
-pip install --extra-index-url https://pypi.jetson-ai-lab.dev/jp5/cu114 torch==2.2.0 torchvision==0.16.0
-```
-
-
-# ultralytics 설치
-
-1) ultralytics 설치
-```
-pip install ultralytics
-```
 
 
 
