@@ -53,7 +53,7 @@ source venv/bin/activate
 python path 확인
 ```
 which python
-# 결과 /usr/bin/로 되어있어야함)
+# 결과 /usr/bin/python 으로 되어있어야함)
 ```
 
 2) python, opencv, gstreamer의 버전과 설치하려는 opencv버전이 gstreamer를 지원하는지 알아보고 설치해야함
