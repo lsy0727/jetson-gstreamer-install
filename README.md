@@ -40,6 +40,7 @@ opencv : 4.8.0
 mkdir workspace && cd ~/workspace
 python -m venv venv
 source venv/bin/activate
+# (venv) user@nx:~/workspace$
 ```
 
 
