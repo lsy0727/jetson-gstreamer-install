@@ -28,7 +28,7 @@
 
 - gstreamer : 1.16.3
 
-/* 설치한 것
+* 설치한 것
 
 python 패키지 : pytorch pytorchvision ultralytics
 
