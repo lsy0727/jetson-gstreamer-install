@@ -35,15 +35,6 @@ python 패키지 : pytorch pytorchvision ultralytics
 opencv : 4.8.0
 
 
-# 작업공간
-```
-mkdir workspace && cd ~/workspace
-python -m venv venv
-source venv/bin/activate
-# (venv) user@nx:~/workspace$
-```
-
-
 # 설치 전 확인할 것
 
 1) 설치된 python버전이 여러개 있는지 확인 (path 지정만 잘 해주면 문제없지만, 문제가 생겼을 때 찾기 힘듦)
@@ -52,14 +43,24 @@ source venv/bin/activate
 
 python path 확인 (가상환경 비활성화 상태에서 확인함)
 ```
-# user@nx:~/workspace$
+# 작업공간 : user@nx:~$
+
 which python
+
 # 결과 /usr/bin/python 으로 되어있어야함)
 ```
 
 2) python, opencv, gstreamer의 버전과 설치하려는 opencv버전이 gstreamer를 지원하는지 알아보고 설치해야함
 
 
+# 작업공간
+```
+mkdir workspace && cd ~/workspace
+python -m venv venv
+source venv/bin/activate
+
+# (venv) user@nx:~/workspace$
+```
 
 # torch, torch vision설치
 
@@ -69,15 +70,11 @@ which python
 
 ![image](https://github.com/user-attachments/assets/d631b1c4-4717-422b-98b7-d0a54b5fdc05)
 
-1) 가상환경 생성, 활성화
-```
-cd ~/workspace/
-python -m venv venv
-. venv/bin/activate
-```
-2) 다운받은 wheel파일을 이용해 패키지 설치 (pip install <file_path>)
+
+1) 다운받은 wheel파일을 이용해 패키지 설치 (pip install <file_path>)
 ```
 # 작업공간 : (venv) user@nx:~/workspace$
+
 # torch 2.2.0
 pip install torch-2.2.0-cp38-cp38-linux_aarch64.whl
 # torch vision 0.16.0
@@ -90,14 +87,19 @@ pip install torchvision-0.17.2+c1d70fe-cp38-cp38-linux_aarch64.whl
 1) ultralytics 설치
 ```
 # 작업공간 : (venv) user@nx:~/workspace$
+
 pip install ultralytics
 ```
 2) opencv를 직접 빌드해서 설치할 것이기 때문에 ultralytics를 설치할 때 함께 설치된 opencv-python을 제거해야함
 -> opencv를 설치하고 ultralytics를 설치하는 방법도 해봤는데, opencv를 pip으로 설치하지 않아서 ultralytics를 설치할 때 opencv를 인식하지 못해 4.11.0으로 갱신되는 문제가 있었음.
 ```
 # 작업공간 : (venv) user@nx:~/workspace$
+
 pip uninstall opencv-python
-# 이 명령으로 제거되지만 잔여 파일이 남아있는지 확인하는 것이 확실함 / 아래 명령어로 확실하게 제거
+
+# 위 명령으로 제거되지만 잔여 파일이 남아있는지 확인하는 것이 확실함
+# 아래 명령어로 확실하게 제거
+
 # rm -rf venv/lib/python3.8/site-packages/cv2
 # rm -rf ~/workspace/venv/lib/python3.8/site-packages/opencv_python-x.xx.x.x.dist-info
 # rm -rf venv/lib/python3.8/site-packages/opencv_python.libs
@@ -110,14 +112,18 @@ opencv 설치 참고자료 : https://qengineering.eu/install-opencv-on-jetson-na
 3-1) opencv 공식 github에서 소스 다운로드
 ```
 # 작업공간 : (venv) user@nx:~/workspace$
+
 wget -O opencv.zip https://github.com/opencv/opencv/archive/4.8.0.zip
 wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/4.8.0.zip
+
 # unpack
 unzip opencv.zip
 unzip opencv_contrib.zip
+
 # some administration to make live easier later on
 mv opencv-4.8.0 opencv
 mv opencv_contrib-4.8.0 opencv_contrib
+
 # clean up the zip files
 rm opencv.zip
 rm opencv_contrib.zip
@@ -126,6 +132,7 @@ rm opencv_contrib.zip
 3-2) opencv/ 아래에 build 디렉토리 생성
 ```
 # 작업공간 : (venv) user@nx:~/workspace$
+
 cd opencv
 mkdir build && cd build
 ```
@@ -133,16 +140,18 @@ mkdir build && cd build
 4) cmake 파일 빌드
 - python path확인
 ```
-# 작업공간 : (venv) user@nx:~/workspace$
+# 작업공간 : (venv) user@nx:~/workspace/opencv/build$
+
 # PYTHON_PACKAGES_PATH 지정을 정확히 해줘야함
 # 아래 명령어 실행 시 path가 가상환경 venv의 site-packages로 되어있어야함
 
 python -c "from sysconfig import get_paths as gp; print(gp()['purelib'])"
 # ex) /home/user/workspace/venv/lib/python3.8/site-packages
 ```
-- path 정상이면면 빌드
+- path 정상이면면 빌드 (python 경로, cuda와 gstreamer옵션 ON을 확인해야함)
 ```
 # 작업공간 : (venv) user@nx:~/workspace/opencv/build$
+
 PYTHON_EXECUTABLE=$(which python)
 PYTHON_INCLUDE_DIR=$(python -c "from sysconfig import get_paths as gp; print(gp()['include'])")
 PYTHON_LIBRARY=$(python -c "import sysconfig; print(sysconfig.get_config_var('LIBDIR'))")/libpython$(python -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')").so
@@ -190,12 +199,15 @@ cmake -D CMAKE_BUILD_TYPE=RELEASE \
 5) 컴파일
 ```
 # 작업공간 : (venv) user@nx:~/workspace/opencv/build$
+
 make -j$(nproc)
+
 # cpu코어가 충분해도 ram이 적다면 make -j2 사용 권장
 ```
 6) 설치
 ```
 # 작업공간 : (venv) user@nx:~/workspace/opencv/build$
+
 make install
 ```
 => 설치완료되면 아래 두 경로에 .so파일이 생성됨
@@ -209,6 +221,7 @@ make install
 - opencv 버전, gstreamer와 cuda사용 가능한지 확인
 ```
 # opencv 4.8.0, GSTREAMER YES, NVIDIA CUDA YES 출력되어야함
+
 python3 -c "import cv2; print(cv2.__version__); print(cv2.getBuildInformation())"
 ```
 
@@ -218,7 +231,14 @@ python3 -c "import cv2; print(cv2.__version__); print(cv2.getBuildInformation())
 
 ## raspberry pi 4 (명령어)
 
-v4l2-ctl --list-formats-ext -d /dev/video0 명령어로 카메라의 지원 포맷/해상도 확인후 명령어 수정
+- 카메라의 지원 포맷/해상도 확인후 gstreamer명령어 수정
+```
+# csi카메라
+# v4l2-ctl --list-formats-ext -d /dev/video0
+
+# usb카메라
+# v4l2-ctl --list-formats-ext -d /dev/video1
+```
 
 csi카메라는 13개의 포맷 지원, 해상도는 1가지로 통일되어있음
 
@@ -231,21 +251,23 @@ usb카메라는 1개의 포맷 지원, 3가지 해상도 가능
 
 ```
 # csi카메라
-# v4l2-ctl --list-formats-ext -d /dev/video0
+
 gst-launch-1.0 v4l2src device=/dev/video0 ! \video/x-raw,width=640,height=480,framerate=30/1 ! \videoconvert ! \x264enc tune=zerolatency bitrate=4000 speed-preset=superfast ! \rtph264pay config-interval=1 pt=96 ! \udpsink host=192.168.0.xxx port=5000 sync=false
 ```
 ```
 # usb카메라
-# v4l2-ctl --list-formats-ext -d /dev/video1 
+
 gst-launch-1.0 v4l2src device=/dev/video1 ! image/jpeg,width=960,height=540,framerate=30/1 ! jpegdec ! videoconvert ! x264enc tune=zerolatency bitrate=4000 speed-preset=superfast ! rtph264pay config-interval=1 pt=96 ! udpsink host=192.168.0.xxx port=5000 sync=false
 ```
 
 ## jetson xavier nx (python 테스트 코드)
 ```
-# 테스트용 명령어
+# 테스트용 수신 명령어
 gst-launch-1.0 udpsrc port=5000 caps="application/x-rtp, media=video, encoding-name=H264, payload=96" ! rtph264depay ! h264parse ! nvv4l2decoder ! nvvidconv ! videoconvert ! autovideosink
 ```
+
 ```
+# 테스트용 python 코드
 import cv2
 
 def main():
@@ -258,7 +280,7 @@ def main():
     )
     cap = cv2.VideoCapture(gst_str, cv2.CAP_GSTREAMER)
     if not cap.isOpened():
-        print("pipeline open failed")
+        print("video open failed")
         return
 
     while True:
@@ -293,17 +315,17 @@ hash -r
 
 Q2. nx환경에서 gstreamer가 명령어로는 열리지만 python코드로 열지 못함
 
-A. pip으로 설치한 opencv-python은 gstreamer를 지원하지 않아, opencv를 직접 빌드해서 사용해야됨
+A. pip으로 설치한 opencv-python은 gstreamer를 지원하지 않음
 
--> opencv를 특정 작업공간에 설치해서 사용했기 때문에 jtop명령어로 opencv확인시 라이브러리를 찾지 못해도 실행에 문제는 없음
+-> opencv 소스를 다운받아 직접 빌드해서 설치해야함 (빌드할 때 gstreamer옵션 중요)
 
 -----
 
-Q3. ultralytics 패키지가 필요해 설치할 경우 opencv를 자동으로 설치해주기 때문에 문제가 생김
+Q3. opencv를 설치하고 ultralytics 패키지를 설치할 경우 opencv를 자동으로 설치해주기 때문에 문제가 생김
 
-A. ultralytics 패키지를 먼저 설치한 후 opencv 관련 파일을 모두 제거하고 opencv를 직접 빌드함
+A. opencv를 직접 빌드해 설치하고 ultralytics를 설치하면 opencv가 없다고 인지해 높은 버전으로 재설치되어 문제가 됨
 
--> opencv를 직접 빌드해 설치하고 ultralytics를 설치하면 opencv가 없다고 인지해 높은 버전으로 재설치되어 문제가 됨
+-> ultralytics 패키지를 먼저 설치한 후 opencv 관련 파일을 모두 제거하고 opencv를 직접 빌드함
 
 ------
 
