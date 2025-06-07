@@ -91,6 +91,7 @@ pip install torchvision-0.17.2+c1d70fe-cp38-cp38-linux_aarch64.whl
 pip install ultralytics
 ```
 2) opencv를 직접 빌드해서 설치할 것이기 때문에 ultralytics를 설치할 때 함께 설치된 opencv-python을 제거해야함
+
 -> opencv를 설치하고 ultralytics를 설치하는 방법도 해봤는데, opencv를 pip으로 설치하지 않아서 ultralytics를 설치할 때 opencv를 인식하지 못해 4.11.0으로 갱신되는 문제가 있었음.
 ```
 # 작업공간 : (venv) user@nx:~/workspace$
