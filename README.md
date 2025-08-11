@@ -68,7 +68,7 @@ source venv/bin/activate
 
 # torch, torch vision설치
 
-참고자료 : https://pypi.jetson-ai-lab.dev/jp5/cu114
+참고자료 : https://pypi.jetson-ai-lab.dev/jp5/cu114 (현재 사이트가 막힌 것 같음. 다른 방법으로 다운받아야함)
 
 해당 사이트에서 torch, torch vision wheel 파일 두 개를 다운받음
 
