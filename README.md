@@ -66,7 +66,7 @@ source venv/bin/activate
 # (venv) user@nx:~/workspace$
 ```
 
-# torch, torch vision설치
+# torch, torchvision설치
 
 참고자료 : https://pypi.jetson-ai-lab.dev/jp5/cu114 (현재 사이트가 막힌 것 같음. 다른 방법으로 다운받아야함)
 
