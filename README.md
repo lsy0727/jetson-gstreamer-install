@@ -48,7 +48,7 @@ python path 확인 (가상환경 비활성화 상태에서 확인함)
 which python
 # 결과 /usr/bin/python 으로 되어있어야함)
 
-# /usr/bin/python 에 링크가 어디에 되어있는지 확인해야함
+# /usr/bin/python 에 링크가 어디에 걸려있는지 확인해야함
 ls -l /usr/bin/python*
 ```
 ![image](https://github.com/user-attachments/assets/1a15d856-2bbb-4d03-93f0-3f2e42c5988b)
