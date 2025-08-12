@@ -57,7 +57,7 @@ ls -l /usr/bin/python*
 2) python, opencv, gstreamer의 버전과 설치하려는 opencv버전이 gstreamer를 지원하는지 알아보고 설치해야함
 
 
-# 작업공간
+# 작업환경 구축
 ```
 mkdir workspace && cd ~/workspace
 python -m venv venv
