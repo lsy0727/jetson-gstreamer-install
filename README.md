@@ -6,7 +6,7 @@
 
 - 3줄요약 (opencv, python 패키지 설치 순서 매우 중요함)
 ```
-1. torch, torch vision 설치
+1. torch, torchvision 설치
 2. ultralytics 설치 & opencv 관련 파일 제거
 3. opencv 설치
 ```
