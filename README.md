@@ -98,9 +98,9 @@ pip install ultralytics
 
 -> opencv를 설치하고 ultralytics를 설치하는 방법도 해봤는데,
 
-   opencv를 pip으로 설치하지 않아서 ultralytics를 설치할 때 opencv를 인식하지 못해 opencv-python 4.11.0으로 갱신되는 문제가 있었음.
+   opencv를 pip으로 설치하지 않아서 ultralytics를 설치할 때 opencv를 인식하지 못해 opencv-python으로 갱신되는 문제가 있었음.
 
-opencv 4.8.0이 python3.8과 잘 맞는다고 판단해서 임의로 버전을 맞춰주었음
+gstreamer를 사용하지 않는다면 opencv-python을 그대로 사용해도 됨
 ```
 # 작업공간 : (venv) user@nx:~/workspace$
 
